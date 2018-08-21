@@ -5,7 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 
-	pkgAws "github.com/andream16/aws-sdk-go-bindings/pkg/aws"
+	pkgAws "github.com/easynetwork/aws-sdk-go-bindings/pkg/aws"
 )
 
 // SQS embeds *sns.SNS

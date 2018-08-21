@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/andream16/aws-sdk-go-bindings/pkg/aws"
-	"github.com/andream16/aws-sdk-go-bindings/testdata"
+	"github.com/easynetwork/aws-sdk-go-bindings/pkg/aws"
+	"github.com/easynetwork/aws-sdk-go-bindings/testdata"
 )
 
 func TestNew(t *testing.T) {

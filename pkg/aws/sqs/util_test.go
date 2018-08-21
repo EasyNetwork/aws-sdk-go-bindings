@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/andream16/aws-sdk-go-bindings/testdata"
+	"github.com/easynetwork/aws-sdk-go-bindings/testdata"
 	"github.com/stretchr/testify/assert"
 )
 

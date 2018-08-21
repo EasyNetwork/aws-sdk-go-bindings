@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/rekognition"
 	"github.com/fatih/structs"
 
-	intErr "github.com/andream16/aws-sdk-go-bindings/internal/error"
+	intErr "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
 
 // CompareFacesInput contains parameters to be sent to CompareFaces

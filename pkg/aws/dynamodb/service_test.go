@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/andream16/aws-sdk-go-bindings/internal/configuration"
-	"github.com/andream16/aws-sdk-go-bindings/testdata"
+	"github.com/easynetwork/aws-sdk-go-bindings/internal/configuration"
+	"github.com/easynetwork/aws-sdk-go-bindings/testdata"
 )
 
 type TestDynamoDBDynamoPutItemType struct {

@@ -9,7 +9,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/s3"
 
-	intErr "github.com/andream16/aws-sdk-go-bindings/internal/error"
+	intErr "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
 
 // ReadImageOutput embeds the result of opening an image and getting its metadata

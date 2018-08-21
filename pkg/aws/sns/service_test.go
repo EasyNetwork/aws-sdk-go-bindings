@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	pkgAws "github.com/andream16/aws-sdk-go-bindings/pkg/aws"
-	"github.com/andream16/aws-sdk-go-bindings/testdata"
+	pkgAws "github.com/easynetwork/aws-sdk-go-bindings/pkg/aws"
+	"github.com/easynetwork/aws-sdk-go-bindings/testdata"
 )
 
 func TestSession_SnsPublish(t *testing.T) {

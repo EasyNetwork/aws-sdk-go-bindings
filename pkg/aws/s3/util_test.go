@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/andream16/aws-sdk-go-bindings/testdata"
+	"github.com/easynetwork/aws-sdk-go-bindings/testdata"
 )
 
 func TestReadImageOutput_SetBody(t *testing.T) {

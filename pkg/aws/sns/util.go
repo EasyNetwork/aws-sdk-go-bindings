@@ -7,7 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/sns"
 
-	intErr "github.com/andream16/aws-sdk-go-bindings/internal/error"
+	intErr "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
 
 // Body is used to initialize a valid SNS message

@@ -5,7 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
 
-	pkgAws "github.com/andream16/aws-sdk-go-bindings/pkg/aws"
+	pkgAws "github.com/easynetwork/aws-sdk-go-bindings/pkg/aws"
 )
 
 // SNS embeds sns.SNS to be used to call New

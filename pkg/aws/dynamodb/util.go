@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 
-	intError "github.com/andream16/aws-sdk-go-bindings/internal/error"
+	intError "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
 
 // NewPutItemInput returns a new *dynamodb.PutItemInput
