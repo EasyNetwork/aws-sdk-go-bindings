@@ -15,19 +15,20 @@ type Session struct {
 // New returns a new *Session embedding *session.Session
 func New(input *SessionInput) (*Session, error) {
 
-	if len(input.region) == 0 {
+	if input.region == "" {
 		return nil, errors.New(ErrNoRegionProvided)
 	}
 
-	cfg := new(aws.Config)
-	cfg.Region = aws.String(input.region)
-
-	awsSession, awsSessionErr := session.NewSession(cfg)
-	if awsSessionErr != nil {
-		return nil, awsSessionErr
+	cfg := &aws.Config{
+		Region: aws.String(input.region),
 	}
 
-	svc := new(Session)
+	awsSession, err := session.NewSession(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	svc := &Session{}
 
 	svc.Session = awsSession
 

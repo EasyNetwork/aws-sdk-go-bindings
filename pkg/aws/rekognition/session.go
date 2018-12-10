@@ -16,17 +16,18 @@ type Rekognition struct {
 // New returns a new *Rekognition embedding *rekognition.Rekognition
 func New(svc *pkgAws.Session, region string) (*Rekognition, error) {
 
-	if len(region) > 0 {
+	if region != "" {
 		svc.Config.Region = aws.String(region)
 	}
 
-	newSvc, newSvcErr := session.NewSession(svc.Config)
-	if newSvcErr != nil {
-		return nil, newSvcErr
+	newSvc, err := session.NewSession(svc.Config)
+	if err != nil {
+		return nil, err
 	}
 
-	rekognitionSvc := new(Rekognition)
-	rekognitionSvc.Rekognition = rekognition.New(newSvc)
+	rekognitionSvc := &Rekognition{
+		Rekognition: rekognition.New(newSvc),
+	}
 
 	return rekognitionSvc, nil
 

@@ -128,9 +128,9 @@ func TestUnmarshalCompareFacesOutput(t *testing.T) {
 
 	var out CompareFacesOutput
 
-	outErr := UnmarshalCompareFacesOutput(compareFacesOutputMock, &out)
+	err := UnmarshalCompareFacesOutput(compareFacesOutputMock, &out)
 
-	assert.NoError(t, outErr)
+	assert.NoError(t, err)
 
 	assert.NotEmpty(t, out)
 
@@ -140,9 +140,9 @@ func TestUnmarshalDetectFacesOutput(t *testing.T) {
 
 	var out DetectFacesOutput
 
-	outErr := UnmarshalDetectFacesOutput(detectFacesOutputMock, &out)
+	err := UnmarshalDetectFacesOutput(detectFacesOutputMock, &out)
 
-	assert.NoError(t, outErr)
+	assert.NoError(t, err)
 	assert.NotEmpty(t, out)
 
 }
@@ -151,21 +151,9 @@ func TestUnmarshalDetectTextOutput(t *testing.T) {
 
 	var out DetectTextOutput
 
-	outErr := UnmarshalDetectTextOutput(detectTextMock, &out)
+	err := UnmarshalDetectTextOutput(detectTextMock, &out)
 
-	assert.NoError(t, outErr)
-
-	assert.NotEmpty(t, out)
-
-}
-
-func TestUnmarshalRekognitionOut(t *testing.T) {
-
-	var out CompareFacesOutput
-
-	outErr := unmarshalRekognitionOut(compareFacesOutputMock, &out)
-
-	assert.NoError(t, outErr)
+	assert.NoError(t, err)
 
 	assert.NotEmpty(t, out)
 
@@ -177,23 +165,23 @@ func TestNewCompareFacesInput(t *testing.T) {
 	source := []byte("someSource")
 	similarity := 90.0
 
-	in, inErr := NewCompareFacesInput(source, target, similarity)
+	in, err := NewCompareFacesInput(source, target, similarity)
 
-	assert.NoError(t, inErr)
+	assert.NoError(t, err)
 	assert.NotEmpty(t, in)
 	assert.Equal(t, source, in.SourceImage.Bytes)
 	assert.Equal(t, target, in.TargetImage.Bytes)
 	assert.Equal(t, similarity, *in.SimilarityThreshold)
 
-	_, shouldBeEmptyErr1 := NewCompareFacesInput([]byte{}, target, similarity)
-	assert.Contains(t, shouldBeEmptyErr1.Error(), ErrEmptyParameter)
+	_, err = NewCompareFacesInput([]byte{}, target, similarity)
+	assert.Contains(t, err.Error(), ErrEmptyParameter)
 
-	_, shouldBeEmptyErr2 := NewCompareFacesInput(source, []byte{}, similarity)
-	assert.Contains(t, shouldBeEmptyErr2.Error(), ErrEmptyParameter)
+	_, err = NewCompareFacesInput(source, []byte{}, similarity)
+	assert.Contains(t, err.Error(), ErrEmptyParameter)
 
-	_, shouldBeBadSimilarityErr := NewCompareFacesInput(source, target, 0.0)
+	_, err = NewCompareFacesInput(source, target, 0.0)
 
-	assert.Contains(t, shouldBeBadSimilarityErr.Error(), ErrBadSimilarityParameter)
+	assert.Contains(t, err.Error(), ErrBadSimilarityParameter)
 
 }
 
@@ -201,9 +189,9 @@ func TestNewDetectFacesInput(t *testing.T) {
 
 	source := []byte("someSource")
 
-	in, inErr := NewDetectFacesInput(source)
+	in, err := NewDetectFacesInput(source)
 
-	assert.NoError(t, inErr)
+	assert.NoError(t, err)
 
 	assert.NotEmpty(t, in)
 	assert.Equal(t, source, in.Image.Bytes)
@@ -214,23 +202,11 @@ func TestNewDetectTextInput(t *testing.T) {
 
 	source := []byte("someSource")
 
-	in, inErr := NewDetectTextInput(source)
+	in, err := NewDetectTextInput(source)
 
-	assert.NoError(t, inErr)
+	assert.NoError(t, err)
 
 	assert.NotEmpty(t, in)
 	assert.Equal(t, source, in.Image.Bytes)
-
-}
-
-func TestNewInputImage(t *testing.T) {
-
-	source := []byte("someSource")
-
-	img, imgErr := newInputImage(source)
-
-	assert.NoError(t, imgErr)
-	assert.NotEmpty(t, img)
-	assert.Equal(t, source, img.Bytes)
 
 }

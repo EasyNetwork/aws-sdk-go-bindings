@@ -18,16 +18,16 @@ func NewPutItemInput(input interface{}, table string) (*dynamodb.PutItemInput, e
 	if reflect.DeepEqual(input, reflect.Zero(reflect.TypeOf(input)).Interface()) {
 		return nil, intError.Format(ErrEmptyParameter, Input)
 	}
-	if len(table) == 0 {
+	if table == "" {
 		return nil, intError.Format(ErrEmptyParameter, Table)
 	}
 
-	dynamoInput, dynamoInputErr := dynamodbattribute.MarshalMap(input)
-	if dynamoInputErr != nil {
-		return nil, dynamoInputErr
+	dynamoInput, err := dynamodbattribute.MarshalMap(input)
+	if err != nil {
+		return nil, err
 	}
 
-	out := new(dynamodb.PutItemInput)
+	out := &dynamodb.PutItemInput{}
 	out = out.SetItem(dynamoInput)
 	out = out.SetTableName(table)
 
@@ -38,17 +38,17 @@ func NewPutItemInput(input interface{}, table string) (*dynamodb.PutItemInput, e
 // NewGetItemInput returns a new *GetItemInput
 func NewGetItemInput(table, keyName, keyValue string) (*dynamodb.GetItemInput, error) {
 
-	if len(table) == 0 {
+	if table == "" {
 		return nil, intError.Format(ErrEmptyParameter, Table)
 	}
-	if len(keyName) == 0 {
+	if keyName == "" {
 		return nil, intError.Format(ErrEmptyParameter, KeyName)
 	}
-	if len(keyValue) == 0 {
+	if keyValue == "" {
 		return nil, intError.Format(ErrEmptyParameter, KeyValue)
 	}
 
-	out := new(dynamodb.GetItemInput)
+	out := &dynamodb.GetItemInput{}
 	out = out.SetTableName(table)
 	out = out.SetKey(
 		map[string]*dynamodb.AttributeValue{
@@ -83,9 +83,9 @@ func UnmarshalStreamImage(input events.DynamoDBEventRecord, output interface{}) 
 
 	for k, v := range img {
 
-		bytes, marshalErr := v.MarshalJSON()
-		if marshalErr != nil {
-			return marshalErr
+		bytes, err := v.MarshalJSON()
+		if err != nil {
+			return err
 		}
 
 		var dbAttr dynamodb.AttributeValue

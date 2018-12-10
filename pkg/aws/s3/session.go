@@ -16,17 +16,18 @@ type S3 struct {
 // New returns a new *S3 embedding *s3.S3
 func New(svc *pkgAws.Session, endpoint string) (*S3, error) {
 
-	if len(endpoint) > 0 {
+	if endpoint != "" {
 		svc.Config.Endpoint = aws.String(endpoint)
 	}
 
-	newSvc, newSvcErr := session.NewSession(svc.Config)
-	if newSvcErr != nil {
-		return nil, newSvcErr
+	newSvc, err := session.NewSession(svc.Config)
+	if err != nil {
+		return nil, err
 	}
 
-	s3Svc := new(S3)
-	s3Svc.S3 = s3.New(newSvc)
+	s3Svc := &S3{
+		S3: s3.New(newSvc),
+	}
 
 	return s3Svc, nil
 

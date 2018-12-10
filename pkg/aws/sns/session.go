@@ -16,17 +16,18 @@ type SNS struct {
 // New returns a new *SNS embedding *sns.SNS
 func New(svc *pkgAws.Session, endpoint string) (*SNS, error) {
 
-	if len(endpoint) > 0 {
+	if endpoint != "" {
 		svc.Config.Endpoint = aws.String(endpoint)
 	}
 
-	newSvc, newSvcErr := session.NewSession(svc.Config)
-	if newSvcErr != nil {
-		return nil, newSvcErr
+	newSvc, err := session.NewSession(svc.Config)
+	if err != nil {
+		return nil, err
 	}
 
-	snsSvc := new(SNS)
-	snsSvc.SNS = sns.New(newSvc)
+	snsSvc := &SNS{
+		SNS: sns.New(newSvc),
+	}
 
 	return snsSvc, nil
 

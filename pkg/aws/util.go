@@ -10,13 +10,13 @@ type SessionInput struct {
 // NewSessionInput returns a new *SessionInput
 func NewSessionInput(region string) (*SessionInput, error) {
 
-	if len(region) == 0 {
+	if region == "" {
 		return nil, errors.New(ErrNoRegionProvided)
 	}
 
-	svc := new(SessionInput)
-
-	svc.region = region
+	svc := &SessionInput{
+		region: region,
+	}
 
 	return svc, nil
 

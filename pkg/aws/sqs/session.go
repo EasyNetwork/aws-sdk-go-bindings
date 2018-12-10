@@ -16,17 +16,18 @@ type SQS struct {
 // New returns a new *SQS
 func New(svc *pkgAws.Session, endpoint string) (*SQS, error) {
 
-	if len(endpoint) > 0 {
+	if endpoint != "" {
 		svc.Config.Endpoint = aws.String(endpoint)
 	}
 
-	newSvc, newSvcErr := session.NewSession(svc.Config)
-	if newSvcErr != nil {
-		return nil, newSvcErr
+	newSvc, err := session.NewSession(svc.Config)
+	if err != nil {
+		return nil, err
 	}
 
-	sqsSvc := new(SQS)
-	sqsSvc.SQS = sqs.New(newSvc)
+	sqsSvc := &SQS{
+		SQS: sqs.New(newSvc),
+	}
 
 	return sqsSvc, nil
 

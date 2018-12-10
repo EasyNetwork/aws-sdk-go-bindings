@@ -45,8 +45,8 @@ type DetectTextOutput struct {
 
 // FaceMatches contains CompareFaces Face Matches
 type FaceMatches struct {
-	Face       Face `json:"Face,omitempty"`
-	Similarity int  `json:"Similarity,omitempty"`
+	Face       Face    `json:"Face,omitempty"`
+	Similarity float64 `json:"Similarity,omitempty"`
 }
 
 // FaceDetails contains Face Details
@@ -176,14 +176,14 @@ func unmarshalRekognitionOut(input, output interface{}) error {
 		return intErr.Format(Map, ErrEmptyMap)
 	}
 
-	bytes, marshalErr := json.Marshal(m)
-	if marshalErr != nil {
-		return marshalErr
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		return err
 	}
 
-	unmarshalErr := json.Unmarshal(bytes, output)
-	if unmarshalErr != nil {
-		return unmarshalErr
+	err = json.Unmarshal(bytes, output)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -205,16 +205,16 @@ func NewCompareFacesInput(source, target []byte, similarity float64) (*rekogniti
 		return nil, intErr.Format(Similarity, ErrBadSimilarityParameter)
 	}
 
-	newSourceInputImg, newSourceInputImgErr := newInputImage(source)
-	if newSourceInputImgErr != nil {
-		return nil, newSourceInputImgErr
+	newSourceInputImg, err := newInputImage(source)
+	if err != nil {
+		return nil, err
 	}
-	newTargetInputImg, newTargetInputImgErr := newInputImage(target)
-	if newTargetInputImgErr != nil {
-		return nil, newTargetInputImgErr
+	newTargetInputImg, err := newInputImage(target)
+	if err != nil {
+		return nil, err
 	}
 
-	out := new(rekognition.CompareFacesInput)
+	out := &rekognition.CompareFacesInput{}
 	out = out.SetSimilarityThreshold(similarity)
 	out = out.SetSourceImage(newSourceInputImg)
 	out = out.SetTargetImage(newTargetInputImg)
@@ -230,12 +230,12 @@ func NewDetectFacesInput(source []byte) (*rekognition.DetectFacesInput, error) {
 		return nil, intErr.Format(Source, ErrEmptyParameter)
 	}
 
-	newInputImg, newInputImgErr := newInputImage(source)
-	if newInputImgErr != nil {
-		return nil, newInputImgErr
+	newInputImg, err := newInputImage(source)
+	if err != nil {
+		return nil, err
 	}
 
-	out := new(rekognition.DetectFacesInput)
+	out := &rekognition.DetectFacesInput{}
 	out = out.SetImage(newInputImg)
 
 	return out, nil
@@ -249,12 +249,12 @@ func NewDetectTextInput(source []byte) (*rekognition.DetectTextInput, error) {
 		return nil, intErr.Format(Source, ErrEmptyParameter)
 	}
 
-	newInputImg, newInputImgErr := newInputImage(source)
-	if newInputImgErr != nil {
-		return nil, newInputImgErr
+	newInputImg, err := newInputImage(source)
+	if err != nil {
+		return nil, err
 	}
 
-	out := new(rekognition.DetectTextInput)
+	out := &rekognition.DetectTextInput{}
 	out = out.SetImage(newInputImg)
 
 	return out, nil
@@ -268,9 +268,9 @@ func newInputImage(image []byte) (*rekognition.Image, error) {
 		return nil, intErr.Format(Image, ErrEmptyParameter)
 	}
 
-	out := new(rekognition.Image)
-
-	out.Bytes = image
+	out := &rekognition.Image{
+		Bytes: image,
+	}
 
 	return out, nil
 

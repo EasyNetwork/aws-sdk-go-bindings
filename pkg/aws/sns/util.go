@@ -18,7 +18,7 @@ type Body struct {
 // NewPublishInput returns a new *PublishInput given a body and an endpoint
 func NewPublishInput(input interface{}, endpoint string) (*sns.PublishInput, error) {
 
-	if len(endpoint) == 0 {
+	if endpoint == "" {
 		return nil, intErr.Format(Endpoint, ErrEmptyParameter)
 	}
 
@@ -26,9 +26,9 @@ func NewPublishInput(input interface{}, endpoint string) (*sns.PublishInput, err
 		return nil, intErr.Format(Input, ErrPointerParameterNotAllowed)
 	}
 
-	inBytes, inErr := json.Marshal(input)
-	if inErr != nil {
-		return nil, inErr
+	inBytes, err := json.Marshal(input)
+	if err != nil {
+		return nil, err
 	}
 
 	// Mandatory since SNS needs escaped `"`. So we need to escape them to `\"`
@@ -45,12 +45,12 @@ func NewPublishInput(input interface{}, endpoint string) (*sns.PublishInput, err
 	}
 
 	// Mandatory since we want to get a string out of encoded bytes
-	msgBytes, msgErr := json.Marshal(snsBody)
-	if msgErr != nil {
-		return nil, msgErr
+	msgBytes, err := json.Marshal(snsBody)
+	if err != nil {
+		return nil, err
 	}
 
-	out := new(sns.PublishInput)
+	out := &sns.PublishInput{}
 	out = out.SetMessage(string(msgBytes))
 	out = out.SetMessageStructure(MessageStructure)
 	out = out.SetTargetArn(endpoint)
@@ -62,7 +62,7 @@ func NewPublishInput(input interface{}, endpoint string) (*sns.PublishInput, err
 // UnmarshalMessage unmarshal an SNS Message to a given interface
 func UnmarshalMessage(message string, input interface{}) error {
 
-	if len(message) == 0 {
+	if message == "" {
 		return intErr.Format(Message, ErrEmptyParameter)
 	}
 
@@ -72,9 +72,9 @@ func UnmarshalMessage(message string, input interface{}) error {
 
 	uS := unescapeMessageString(message)
 
-	unmarshalErr := json.Unmarshal([]byte(uS), input)
-	if unmarshalErr != nil {
-		return unmarshalErr
+	err := json.Unmarshal([]byte(uS), input)
+	if err != nil {
+		return err
 	}
 
 	return nil

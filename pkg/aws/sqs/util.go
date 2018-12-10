@@ -14,11 +14,11 @@ import (
 // NewCreateQueueInput creates a new queue given its name
 func NewCreateQueueInput(queueName string) (*sqs.CreateQueueInput, error) {
 
-	if len(queueName) == 0 {
+	if queueName == "" {
 		return nil, intError.Format(QueueName, ErrEmptyParameter)
 	}
 
-	out := new(sqs.CreateQueueInput)
+	out := &sqs.CreateQueueInput{}
 	out = out.SetQueueName(queueName)
 
 	return out, nil
@@ -28,11 +28,11 @@ func NewCreateQueueInput(queueName string) (*sqs.CreateQueueInput, error) {
 // NewGetQueueAttributesInput returns a new *sqs.GetQueueAttributesInput given a queueUrl
 func NewGetQueueAttributesInput(queueUrl string) (*sqs.GetQueueAttributesInput, error) {
 
-	if len(queueUrl) == 0 {
+	if queueUrl == "" {
 		return nil, intError.Format(QueueUrl, ErrEmptyParameter)
 	}
 
-	out := new(sqs.GetQueueAttributesInput)
+	out := &sqs.GetQueueAttributesInput{}
 	out = out.SetQueueUrl(queueUrl)
 
 	return out, nil
@@ -47,11 +47,11 @@ func NewSendMessageInput(input interface{}, queueUrl string, base64Encode bool) 
 		return nil, intError.Format(Input, ErrNoPointerParameterAllowed)
 	}
 
-	if len(queueUrl) == 0 {
+	if queueUrl == "" {
 		return nil, intError.Format(QueueUrl, ErrEmptyParameter)
 	}
 
-	out := new(sqs.SendMessageInput)
+	out := &sqs.SendMessageInput{}
 
 	msgBody, err := marshalStructToJson(input)
 	if err != nil {
@@ -74,11 +74,11 @@ func NewSendMessageInput(input interface{}, queueUrl string, base64Encode bool) 
 // NewGetQueueUrlInput returns a new *sqs.GetQueueUrlInput given a queue name
 func NewGetQueueUrlInput(queueName string) (*sqs.GetQueueUrlInput, error) {
 
-	if len(queueName) == 0 {
+	if queueName == "" {
 		return nil, intError.Format(QueueName, ErrEmptyParameter)
 	}
 
-	out := new(sqs.GetQueueUrlInput)
+	out := &sqs.GetQueueUrlInput{}
 	out = out.SetQueueName(queueName)
 
 	return out, nil
@@ -92,9 +92,9 @@ func marshalStructToJson(input interface{}) ([]byte, error) {
 		return nil, errors.New(ErrNoPointerParameterAllowed)
 	}
 
-	b, marshalErr := json.Marshal(input)
-	if marshalErr != nil {
-		return nil, marshalErr
+	b, err := json.Marshal(input)
+	if err != nil {
+		return nil, err
 	}
 
 	return b, nil
