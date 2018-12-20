@@ -10,7 +10,7 @@
   version = "v1.8.0"
 
 [[projects]]
-  digest = "1:669687e0ada5f7f27a5dfa79315fa2d105f50a32140b608ea7449a8f11943482"
+  digest = "1:c102ef6c9589350d955e8b864f2c9df8c7238ae4bf199aa48d4f4c2c1b34c970"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -50,6 +50,7 @@
     "private/protocol/xml/xmlutil",
     "service/dynamodb",
     "service/dynamodb/dynamodbattribute",
+    "service/dynamodb/expression",
     "service/rekognition",
     "service/s3",
     "service/sns",
@@ -116,6 +117,7 @@
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/dynamodb",
     "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute",
+    "github.com/aws/aws-sdk-go/service/dynamodb/expression",
     "github.com/aws/aws-sdk-go/service/rekognition",
     "github.com/aws/aws-sdk-go/service/s3",
     "github.com/aws/aws-sdk-go/service/sns",

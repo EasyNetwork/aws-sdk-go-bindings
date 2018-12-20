@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 
 	intError "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
@@ -59,6 +60,34 @@ func NewGetItemInput(table, keyName, keyValue string) (*dynamodb.GetItemInput, e
 	)
 
 	return out, nil
+
+}
+
+func NewScanInput(table, keyName string, keyValue interface{}) (*dynamodb.ScanInput, error) {
+
+	if table == "" {
+		return nil, intError.Format(ErrEmptyParameter, table)
+	}
+	if keyName == "" {
+		return nil, intError.Format(ErrEmptyParameter, KeyName)
+	}
+	if keyValue == nil {
+		return nil, intError.Format(ErrEmptyParameter, KeyValue)
+	}
+
+	filter := expression.Name(KeyName).Equal(expression.Value(KeyValue))
+	expr, err := expression.NewBuilder().WithFilter(filter).Build()
+	if err != nil {
+		return nil, err
+	}
+
+	return &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(table),
+	}, nil
 
 }
 
