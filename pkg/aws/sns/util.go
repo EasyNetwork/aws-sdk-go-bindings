@@ -112,20 +112,26 @@ func getAsSNSMessageAttributes(messageAttributes map[string]interface{}) (map[st
 			return nil, err
 		}
 
-		output[k] = new(sns.MessageAttributeValue).
-			SetBinaryValue(vBytes).
-			SetStringValue(string(vBytes))
+		output[k] = new(sns.MessageAttributeValue)
 
 		// Setting data type, since it is required
 		switch t := v.(type) {
 		case string:
-			output[k] = output[k].SetDataType(messageAttributeString)
+			output[k] = output[k].
+				SetStringValue(t).
+				SetDataType(messageAttributeString)
 		case int, float32, float64:
-			output[k] = output[k].SetDataType(messageAttributeNumber)
+			output[k] = output[k].
+				SetStringValue(string(vBytes)).
+				SetDataType(messageAttributeNumber)
 		case []string:
-			output[k] = output[k].SetDataType(messageAttributeStringArray)
+			output[k] = output[k].
+				SetStringValue(string(vBytes)).
+				SetDataType(messageAttributeStringArray)
 		case interface{}:
-			output[k] = output[k].SetDataType(messageAttributesBinary)
+			output[k] = output[k].
+				SetBinaryValue(vBytes).
+				SetDataType(messageAttributesBinary)
 		default:
 			return nil, fmt.Errorf("%v is not a supported type", t)
 		}
