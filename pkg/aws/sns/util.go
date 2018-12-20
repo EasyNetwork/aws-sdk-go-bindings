@@ -112,7 +112,10 @@ func getAsSNSMessageAttributes(messageAttributes map[string]interface{}) (map[st
 			return nil, err
 		}
 
-		output[k] = new(sns.MessageAttributeValue).SetBinaryValue(vBytes)
+		output[k] = new(sns.MessageAttributeValue).
+			SetBinaryValue(vBytes).
+			SetStringValue(string(vBytes))
+
 		// Setting data type, since it is required
 		switch t := v.(type) {
 		case string:

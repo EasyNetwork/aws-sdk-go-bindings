@@ -39,6 +39,7 @@ func TestBuildPublishInput(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res)
+	assert.NotEmpty(t, res.MessageAttributes)
 
 	assert.Equal(t, "edp", *res.TargetArn)
 	assert.NotEqual(t, 0, len(*res.Message))

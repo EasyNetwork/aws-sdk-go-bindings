@@ -2,15 +2,15 @@
 
 
 [[projects]]
-  digest = "1:a9e42e2ab1a8af3964accfe0efdadb774a33294fb03129017cd3868ddbdb2d3c"
+  digest = "1:b352ebb4bbc95f4832f35292f7886883b2bb67792f36e16ebee1addc7165a14c"
   name = "github.com/aws/aws-lambda-go"
   packages = ["events"]
   pruneopts = "UT"
-  revision = "e630af386f8aad6ec9fc899b951cf62d37cfe56f"
-  version = "v1.4.0"
+  revision = "9e3676ee8ca83aee500682f382e10b9d03660093"
+  version = "v1.8.0"
 
 [[projects]]
-  digest = "1:92aa4d948858b6d6ff44deeff6c259674040310e74336dc9997f3bd929a0d35a"
+  digest = "1:669687e0ada5f7f27a5dfa79315fa2d105f50a32140b608ea7449a8f11943482"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -22,7 +22,9 @@
     "aws/credentials",
     "aws/credentials/ec2rolecreds",
     "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
     "aws/credentials/stscreds",
+    "aws/crr",
     "aws/csm",
     "aws/defaults",
     "aws/ec2metadata",
@@ -30,6 +32,8 @@
     "aws/request",
     "aws/session",
     "aws/signer/v4",
+    "internal/ini",
+    "internal/s3err",
     "internal/sdkio",
     "internal/sdkrand",
     "internal/sdkuri",
@@ -53,39 +57,31 @@
     "service/sts",
   ]
   pruneopts = "UT"
-  revision = "859b69a01f8cb52b639bd8c868b116144bddc74a"
-  version = "v1.15.9"
+  revision = "cae66ecf52e0171f937f1fa80e12130fbb652474"
+  version = "v1.16.9"
 
 [[projects]]
-  digest = "1:a2c1d0e43bd3baaa071d1b9ed72c27d78169b2b269f71c105ac4ba34b1be4a39"
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   pruneopts = "UT"
-  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
 
 [[projects]]
-  digest = "1:ca82a3b99694824c627573c2a76d0e49719b4a9c02d1d85a2ac91f1c1f52ab9b"
+  digest = "1:af43bdaaf86655a2343f113e9b293bbc16b12099eaeb223982bbe4d4c22ba14d"
   name = "github.com/fatih/structs"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a720dfa8df582c51dee1b36feabb906bde1588bd"
-  version = "v1.0"
+  revision = "4966fc68f5b7593aafa6cbbba2d65ec6e1416047"
+  version = "v1.1.0"
 
 [[projects]]
-  digest = "1:fe8a03a8222d5b913f256972933d26d24ad7c8286692a42943bc01633cc8fce3"
-  name = "github.com/go-ini/ini"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "358ee7663966325963d4e8b2e1fbd570c5195153"
-  version = "v1.38.1"
-
-[[projects]]
-  digest = "1:e22af8c7518e1eab6f2eab2b7d7558927f816262586cd6ed9f349c97a6c285c4"
+  digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
   pruneopts = "UT"
-  revision = "0b12d6b5"
+  revision = "c2b33e84"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
