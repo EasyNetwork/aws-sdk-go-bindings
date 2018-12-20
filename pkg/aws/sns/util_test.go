@@ -25,13 +25,17 @@ func TestBuildPublishInput(t *testing.T) {
 	}
 	`)
 
+	messageAttributes := map[string]interface{}{
+		"message_attribute": "message_value",
+	}
+
 	var testB TestBuildPublishInputType
 
 	e := json.Unmarshal(body, &testB)
 
 	assert.NoError(t, e)
 
-	res, err := NewPublishInput(testB, "edp")
+	res, err := NewPublishInput(testB, messageAttributes, "edp")
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, res)
@@ -39,7 +43,7 @@ func TestBuildPublishInput(t *testing.T) {
 	assert.Equal(t, "edp", *res.TargetArn)
 	assert.NotEqual(t, 0, len(*res.Message))
 
-	_, errEmptyParameter := NewPublishInput(testB, "")
+	_, errEmptyParameter := NewPublishInput(testB, nil, "")
 
 	assert.Error(t, errEmptyParameter)
 	assert.Contains(t, errEmptyParameter.Error(), ErrEmptyParameter)

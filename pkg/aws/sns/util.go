@@ -2,6 +2,7 @@ package sns
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -10,13 +11,21 @@ import (
 	intErr "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
 
+const (
+	// MessageAttributesDataTypes
+	messageAttributeString      = "String"
+	messageAttributeStringArray = "String.Array"
+	messageAttributeNumber      = "Number"
+	messageAttributesBinary     = "Binary"
+)
+
 // Body is used to initialize a valid SNS message
 type Body struct {
 	Default string `json:"default"`
 }
 
 // NewPublishInput returns a new *PublishInput given a body and an endpoint
-func NewPublishInput(input interface{}, endpoint string) (*sns.PublishInput, error) {
+func NewPublishInput(input interface{}, messageAttributes map[string]interface{}, endpoint string) (*sns.PublishInput, error) {
 
 	if endpoint == "" {
 		return nil, intErr.Format(Endpoint, ErrEmptyParameter)
@@ -50,8 +59,14 @@ func NewPublishInput(input interface{}, endpoint string) (*sns.PublishInput, err
 		return nil, err
 	}
 
+	awsMessageAttributes, err := getAsSNSMessageAttributes(messageAttributes)
+	if err != nil {
+		return nil, err
+	}
+
 	out := &sns.PublishInput{}
 	out = out.SetMessage(string(msgBytes))
+	out = out.SetMessageAttributes(awsMessageAttributes)
 	out = out.SetMessageStructure(MessageStructure)
 	out = out.SetTargetArn(endpoint)
 
@@ -85,4 +100,37 @@ func UnmarshalMessage(message string, input interface{}) error {
 // `"{\"stuff\" : \"somevalue\"}"` and outputs `"{"stuff" : "somevalue"}"`
 func unescapeMessageString(in string) string {
 	return strings.Replace(in, `\"`, `"`, -1)
+}
+
+func getAsSNSMessageAttributes(messageAttributes map[string]interface{}) (map[string]*sns.MessageAttributeValue, error) {
+
+	output := make(map[string]*sns.MessageAttributeValue)
+
+	for k, v := range messageAttributes {
+		vBytes, err := json.Marshal(v)
+		if err != nil {
+			return nil, err
+		}
+
+		output[k] = new(sns.MessageAttributeValue).SetBinaryValue(vBytes)
+		// Setting data type, since it is required
+		switch t := v.(type) {
+		case string:
+			output[k] = output[k].SetDataType(messageAttributeString)
+		case int, float32, float64:
+			output[k] = output[k].SetDataType(messageAttributeNumber)
+		case []string:
+			output[k] = output[k].SetDataType(messageAttributeStringArray)
+		case interface{}:
+			output[k] = output[k].SetDataType(messageAttributesBinary)
+		default:
+			return nil, fmt.Errorf("%v is not a supported type", t)
+		}
+		// Checking message attributes validity
+		if err := output[k].Validate(); err != nil {
+			return nil, err
+		}
+	}
+
+	return output, nil
 }

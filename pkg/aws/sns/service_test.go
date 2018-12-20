@@ -13,6 +13,10 @@ func TestSession_SnsPublish(t *testing.T) {
 
 	body := `{"default":"{\"par1\":\"pr1\",\"par2\":\"pr2\"}"}`
 
+	messageAttributes := map[string]interface{}{
+		"message_attribute": "message_value",
+	}
+
 	cfg := testdata.MockConfiguration(t)
 
 	svcIn, err := pkgAws.NewSessionInput(cfg.Region)
@@ -30,6 +34,7 @@ func TestSession_SnsPublish(t *testing.T) {
 
 	err = snsSvc.SnsPublish(
 		body,
+		messageAttributes,
 		cfg.SNS.TargetArn,
 	)
 
@@ -37,6 +42,7 @@ func TestSession_SnsPublish(t *testing.T) {
 
 	err = snsSvc.SnsPublish(
 		body,
+		nil,
 		"",
 	)
 
@@ -45,6 +51,7 @@ func TestSession_SnsPublish(t *testing.T) {
 
 	err = snsSvc.SnsPublish(
 		&body,
+		nil,
 		cfg.SNS.TargetArn,
 	)
 
