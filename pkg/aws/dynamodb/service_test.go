@@ -3,6 +3,8 @@ package dynamodb
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/stretchr/testify/assert"
 
 	"github.com/easynetwork/aws-sdk-go-bindings/internal/configuration"
@@ -19,6 +21,7 @@ func TestDynamoDB_Methods(t *testing.T) {
 
 	testDynamoDBDynamoPutItem(t, cfg)
 	testDynamoDBDynamoGetItem(t, cfg)
+	testDynamoDBDynamoScan(t, cfg)
 
 }
 
@@ -68,5 +71,32 @@ func testDynamoDBDynamoGetItem(t *testing.T, cfg *configuration.Configuration) {
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, getItemOut)
+
+}
+
+func testDynamoDBDynamoScan(t *testing.T, cfg *configuration.Configuration) {
+	dynamoSvc := testdata.MockDynamoDB(t, cfg)
+
+	tableName := cfg.DynamoDB.PkgTableName
+	primaryKey := cfg.DynamoDB.PrimaryKey
+	keyValue := cfg.DynamoDB.PrimaryKey
+
+	testdata.MockDynamoDBTable(t, dynamoSvc, tableName, cfg)
+
+	var input TestDynamoDBDynamoPutItemType
+	input.SomeParam = cfg.DynamoDB.PrimaryKey
+
+	dynamoNewSvc := &DynamoDB{
+		DynamoDB: dynamoSvc,
+	}
+
+	err := dynamoNewSvc.DynamoPutItem(input, tableName)
+
+	require.NoError(t, err)
+
+	scanOut, err := dynamoNewSvc.DynamoScan(tableName, primaryKey, keyValue)
+
+	assert.NoError(t, err)
+	assert.NotEmpty(t, *scanOut)
 
 }

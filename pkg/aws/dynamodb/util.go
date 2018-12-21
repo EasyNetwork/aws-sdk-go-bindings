@@ -63,6 +63,7 @@ func NewGetItemInput(table, keyName, keyValue string) (*dynamodb.GetItemInput, e
 
 }
 
+// NewScanInput setup ScanInput expression and returns a *ScanInput
 func NewScanInput(table, keyName string, keyValue interface{}) (*dynamodb.ScanInput, error) {
 
 	if table == "" {
@@ -75,7 +76,7 @@ func NewScanInput(table, keyName string, keyValue interface{}) (*dynamodb.ScanIn
 		return nil, intError.Format(ErrEmptyParameter, KeyValue)
 	}
 
-	filter := expression.Name(KeyName).Equal(expression.Value(KeyValue))
+	filter := expression.Name(keyName).Equal(expression.Value(keyValue))
 	expr, err := expression.NewBuilder().WithFilter(filter).Build()
 	if err != nil {
 		return nil, err
@@ -142,4 +143,17 @@ func UnmarshalGetItemOutput(input *dynamodb.GetItemOutput, out interface{}) erro
 
 	return nil
 
+}
+
+// UnmarshalScanOutput unmarshals a *dynamodb.ScanOutput into a passed interface reference
+func UnmarshalScanOutput(input *dynamodb.ScanOutput, out interface{}) error {
+	if reflect.ValueOf(out).Kind() != reflect.Ptr {
+		return intError.Format(ErrNoPointerParameter, Input)
+	}
+	unmarshalError := dynamodbattribute.UnmarshalListOfMaps(input.Items, out)
+	if unmarshalError != nil {
+		return unmarshalError
+	}
+
+	return nil
 }
