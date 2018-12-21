@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 
 	intError "github.com/easynetwork/aws-sdk-go-bindings/internal/error"
 )
@@ -62,6 +63,35 @@ func NewGetItemInput(table, keyName, keyValue string) (*dynamodb.GetItemInput, e
 
 }
 
+// NewScanInput setup ScanInput expression and returns a *ScanInput
+func NewScanInput(table, keyName string, keyValue interface{}) (*dynamodb.ScanInput, error) {
+
+	if table == "" {
+		return nil, intError.Format(ErrEmptyParameter, table)
+	}
+	if keyName == "" {
+		return nil, intError.Format(ErrEmptyParameter, KeyName)
+	}
+	if keyValue == nil {
+		return nil, intError.Format(ErrEmptyParameter, KeyValue)
+	}
+
+	filter := expression.Name(keyName).Equal(expression.Value(keyValue))
+	expr, err := expression.NewBuilder().WithFilter(filter).Build()
+	if err != nil {
+		return nil, err
+	}
+
+	return &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(table),
+	}, nil
+
+}
+
 // UnmarshalStreamImage unmarshals a events.DynamoDBEventRecord in a pointer to an interface
 func UnmarshalStreamImage(input events.DynamoDBEventRecord, output interface{}) error {
 
@@ -113,4 +143,17 @@ func UnmarshalGetItemOutput(input *dynamodb.GetItemOutput, out interface{}) erro
 
 	return nil
 
+}
+
+// UnmarshalScanOutput unmarshals a *dynamodb.ScanOutput into a passed interface reference
+func UnmarshalScanOutput(input *dynamodb.ScanOutput, out interface{}) error {
+	if reflect.ValueOf(out).Kind() != reflect.Ptr {
+		return intError.Format(ErrNoPointerParameter, Input)
+	}
+	unmarshalError := dynamodbattribute.UnmarshalListOfMaps(input.Items, out)
+	if unmarshalError != nil {
+		return unmarshalError
+	}
+
+	return nil
 }
